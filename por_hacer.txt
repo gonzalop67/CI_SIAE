@@ -1,0 +1,8 @@
+Quito, 17 de marzo de 2017
+1. Crear el código para cargar las instituciones definidas en la base de datos
+pasadas por el modelo a la vista, en un combobox.(done!).
+
+Quito, 22 de marzo de 2017
+1. Cambiar la vista login_view.php para que despliegue el error en caso de que
+   el usuario no haya escrito sus credenciales correctas.
+
