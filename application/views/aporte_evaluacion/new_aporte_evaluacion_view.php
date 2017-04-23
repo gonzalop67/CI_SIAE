@@ -32,7 +32,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>SIAE Aportes de Evaluación</title>
+        <title>SIAE Nuevo Aporte de Evaluación</title>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="<?php echo $base_url; ?>css/bootstrap.css">
         <link rel="stylesheet" href="<?php echo $base_url; ?>css/main.css">
@@ -60,82 +60,26 @@
                         "Bootstrap, jQuery, CodeIgniter y AJAX<br/>" +
                         ".: &copy; " + f.getFullYear() + " - UNIDAD EDUCATIVA PCEI FISCAL SALAMANCA :.";
                 $("#pie").html(cadena);
-                //Procedimiento para obtener los aportes de evaluación relacionados con un determinado periodo de evaluación
-                $("#cboPeriodosEvaluacion").change(function(event){
+                
+                $("#new_aporte_evaluacion").submit(function(event){
                     event.preventDefault();
-                    if($(this).val()==0){
-                        $("#nuevoAporteEvaluacion").hide();
-                        $("#mensaje").css("color","red");
-                        $("#mensaje").html("Debe elegir un periodo de evaluación...");
-                        $("#tblAportes tbody").html("");
-                        $(this).focus();
-                    }else{
-                        $("#nuevoAporteEvaluacion").show();
-                        $("#mensaje").html("");
-                        $.post(
-                            "<?php echo site_url('aporte_evaluacion/obtenerAportesEvaluacion') ?>",
-                            {    
-                               id_periodo_evaluacion: $(this).val()
-                            },
-                            function(response) {
-                                var id_periodo_evaluacion = $("#cboPeriodosEvaluacion").val(); 
-                                var obj = JSON.parse(response);
-                                $("#tblAportes tbody").html("");
-                                if(obj.length > 0){
-                                    $.each(obj,
-                                        function(i,item){
-                                            $("#tblAportes tbody").append(
-                                                 '<tr>'+
-                                                     '<td>'+item.id_aporte_evaluacion+'</td>'+
-                                                     '<td>'+item.ap_nombre+'</td>'+
-                                                     '<td><a href="'+'<?php echo $base_url ?>aporte_evaluacion/editar/'+item.id_aporte_evaluacion+'/'+id_periodo_evaluacion+
-                                                        '">Editar</a>'+'</td>'+
-                                                     '<td><a href="#" onclick="eliminar('+item.id_aporte_evaluacion+')">Eliminar</a></td>'+
-                                                 '</tr>'
-                                            );
-                                        }
-                                    );
-                                } else {
-//                                    alert("No se han ingresado aportes de evaluación todavía...");
-                                    $("#tblAportes tbody").append(
-                                        '<tr>'+
-                                            '<td colspan="4">No se han ingresado aportes de evaluación todavía...</td>'+
-                                        '</tr>'
-                                    );
-                                }
-                            }
-                        );
-                    }
-                });
-            });
-
-            function nuevoAporteEvaluacion(){
-                var id_periodo_evaluacion = $("#cboPeriodosEvaluacion").val();
-                if(id_periodo_evaluacion==0){
-                    $("#mensaje").css("color","red");
-                    $("#mensaje").html("Debe elegir un periodo de evaluación");
-                    $("#cboPeriodosEvaluacion").focus();
-                }else{
-                    location.href = "<?php echo site_url('aporte_evaluacion/nuevo/') ?>"+id_periodo_evaluacion;
-                }
-            }
-            
-            function eliminar(id_aporte_evaluacion) {
-                if(confirm("¿Seguro que desea eliminar este aporte de evaluación?")){
                     $("#img_loader").show();
                     $.post(
-                        "<?php echo site_url('aporte_evaluacion/eliminar') ?>",
+                        "<?php echo site_url('aporte_evaluacion/recibirdatos'); ?>",
                         {
-                            id_aporte_evaluacion: id_aporte_evaluacion
+                            id_perfil: "<?php echo $id ?>",
+                            mnu_texto: $("#texto").val(),
+                            mnu_enlace: $("#enlace").val()
                         },
                         function(respuesta){
                             var resp = JSON.parse(respuesta);
-                            alert(resp['mensaje']);
-                            location.href = "<?php echo site_url('aporte_evaluacion') ?>"
+                            $("#img_loader").hide();
+                            alert(resp.mensaje);
+                            location.href = "<?php echo site_url('aporte_evaluacion') ?>";
                         }
                     );
-                }
-            }
+                });
+            });
         </script>
     </head>
     
@@ -192,13 +136,13 @@
                             <?php foreach($listarMenusNivel1 as $menu1) { ?>
                                 <?php if(count($this->Menu_model->listarMenusHijos($menu1->id_menu)) > 0) { ?>
                                     <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <a href="<?php echo $menu1->mnu_enlace; ?>" class="dropdown-toggle" data-toggle="dropdown">
                                             <?php echo $menu1->mnu_texto; ?> <b class="caret"></b>
                                         </a>
                                         <ul class="dropdown-menu">
                                             <?php foreach($this->Menu_model->listarMenusHijos($menu1->id_menu) as $menu2) { ?>
                                                 <li>
-                                                    <a href="<?php echo $base_url . $menu2->mnu_enlace; ?>">
+                                                    <a href="<?php echo $menu2->mnu_enlace; ?>">
                                                         <?php echo $menu2->mnu_texto; ?>
                                                     </a>
                                                 </li>
@@ -224,36 +168,45 @@
 	</div>
 
         <div class="row text-center color1">
-            <h3>LISTA DE APORTES DE EVALUACIÓN EXISTENTES</h3>
+            <h3>INGRESAR UN NUEVO APORTE DE EVALUACIÓN</h3>
         </div>
+
+        <div id="mensaje" class="row text-center">
+            <!-- Aqui va el mensaje de eliminacion -->
+        </div>
+
+        <!-- Aqui va el formulario de ingreso de un nuevo perfil -->
+        <form id="new_menu" class="form-horizontal form-margin" role="form" method="post" action="">
+            <div class="form-group" style="margin-top: 8px">
+                <label for="nomPeriodoEvaluacion" class="col-sm-2 control-label">Periodo de Evaluación:</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="nomPeriodoEvaluacion" name="nomPeriodoEvaluacion" type="text" value="<?php echo $periodo_evaluacion_nom ?>" disabled>
+                </div>    
+            </div>
+            <div class="form-group" style="margin-top: 8px">
+                <label for="texto" class="col-sm-2 control-label">Texto:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="texto" name="texto" type="text" placeholder="Texto del Menú" value="" required autofocus>
+                </div>    
+            </div>
+            <div class="form-group" style="margin-top: 8px">
+                <label for="enlace" class="col-sm-2 control-label">Enlace:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="enlace" name="enlace" type="text" placeholder="Enlace del Menú" value="" required>
+                </div>    
+            </div>
+            <div class="form-group">
+              <div class="col-sm-10 col-sm-offset-2">
+                 <input type="submit" name="submit" id="submit" value="Enviar" class="btn btn-primary">
+              </div>
+            </div>
+        </form>
 
         <div class="container-fluid margin-padding text-center">
             <div class="row">
-                <div id="periodos_evaluacion" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <!--Aqui va el combo de perfiles existentes en la base de datos -->
-                    <select id="cboPeriodosEvaluacion">
-                        <option value="0">Seleccione un periodo...</option>
-                        <?php
-                        if ($periodos_evaluacion) {
-                            //impresión de los datos.
-                            foreach ($periodos_evaluacion->result() as $periodo_evaluacion) {
-                                $id = $periodo_evaluacion->id_periodo_evaluacion;
-                                $name = $periodo_evaluacion->pe_nombre;
-                                echo "<option value=\"" . $id . "\">" . $name . "</option>";
-                            }
-                        }
-                        ?>
-                    </select>
+                <div id="mensaje-error" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="color: <?php echo $color; ?>">
+                    <!--Aqui va el mensaje de error de validacion de formulario-->
                 </div>
-            </div>
-        </div>
-        
-        <div id="mensaje" class="row text-center">
-            <!-- Aqui va el mensaje de error -->
-        </div>
-        
-        <div class="container-fluid margin-padding text-center">
-            <div class="row">
                 <div id="img_loader" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 div-oculto">
                     <!--Aqui va el gif de "procesando..." el formulario-->
                     <img src="<?php echo $base_url; ?>img/ajax-loader.gif" alt="Procesando...">
@@ -261,23 +214,8 @@
             </div>
         </div>
         
-        <div id="listado" class="table-responsive text-center">
-            <table id="tblAportes" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th colspan="2">Acciones</th> 
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí se "pintarán" los aportes de evaluación existentes... -->
-                </tbody>
-            </table>
-        </div>
-
-        <div id="nuevoAporteEvaluacion" class="text-center" style="margin-bottom: 8px; display: none;">
-            <a class="btn btn-default" href="#" onclick="nuevoAporteEvaluacion()" role="button">NUEVO APORTE DE EVALUACIÓN</a>
+        <div class="text-center" style="margin-bottom: 8px;">
+            <a class="btn btn-default" href="<?php echo site_url('menu') ?>" role="button">Regresar a la lista</a>
         </div>
         
         <footer class="color-footer text-center colorfuente">
