@@ -64,21 +64,45 @@
                 $("#cboPeriodosEvaluacion").change(function(event){
                     event.preventDefault();
                     if($(this).val()==0){
+                        $("#nuevoAporteEvaluacion").hide();
                         $("#mensaje").css("color","red");
                         $("#mensaje").html("Debe elegir un periodo de evaluación...");
                         $(this).focus();
                     }else{
+                        $("#nuevoAporteEvaluacion").show();
                         $("#mensaje").html("");
                         $.post(
-                           "<?php echo site_url('aporte_evaluacion/obtenerAportesEvaluacion') ?>",
-                           {    
+                            "<?php echo site_url('aporte_evaluacion/obtenerAportesEvaluacion') ?>",
+                            {    
                                id_periodo_evaluacion: $(this).val()
-                           },
-                           function(response) {
-                                alert(response);
-                                var aportes_evaluacion = JSON.parse(response);
-                               
-                           }
+                            },
+                            function(response) {
+                                var id_periodo_evaluacion = $("#cboPeriodosEvaluacion").val(); 
+                                var obj = JSON.parse(response);
+//                                    alert(obj.length);
+                                if(obj.length > 0){
+                                    $.each(obj,
+                                        function(i,item){
+                                            $("#tblAportes tbody").append(
+                                                 '<tr>'+
+                                                     '<td>'+item.id_aporte_evaluacion+'</td>'+
+                                                     '<td>'+item.ap_nombre+'</td>'+
+                                                     '<td><a href="'+'<?php echo $base_url ?>aporte_evaluacion/editar/'+item.id_aporte_evaluacion+'/'+id_periodo_evaluacion+
+                                                        '">Editar</a>'+'</td>'+
+                                                     '<td><a href="#" onclick="eliminar('+item.id_aporte_evaluacion+')">Eliminar</a></td>'+
+                                                 '</tr>'
+                                            );
+                                        }
+                                    );
+                                } else {
+//                                    alert("No se han ingresado aportes de evaluación todavía...");
+                                    $("#tblAportes tbody").append(
+                                        '<tr>'+
+                                            '<td colspan="4">No se han ingresado aportes de evaluación todavía...</td>'+
+                                        '</tr>'
+                                    );
+                                }
+                            }
                         );
                     }
                 });
@@ -237,7 +261,7 @@
         </div>
         
         <div id="listado" class="table-responsive text-center">
-            <table class="table table-bordered table-striped">
+            <table id="tblAportes" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -246,26 +270,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-//                    if ($aportes_evaluacion) {
-//                        //impresión de los datos.
-//                        foreach ($aportes_evaluacion->result() as $aportes_evaluacion) {
-//                            $id = $aporte_evaluacion->id_aporte_evaluacion;
-//                            $name = $aporte_evaluacion->ap_nombre;
-//                            echo "<tr><td>$id</td>\n";
-//                            echo "<td>$name</td>\n";
-//                            echo "<td><a href='aporte_evaluacion/editar/$id'>Editar</a></td>\n";
-//                            echo "<td><a href='#' onclick='eliminar(".$id.")'>Eliminar</a></td></tr>\n";
-//                        }
-//                    } else {
-//                        echo "<td colspan='4' align='center'>No se han definido aportes de evaluación todavia...</td>";
-//                    }
-                    ?>
+                    <!-- Aquí se "pintarán" los aportes de evaluación existentes... -->
                 </tbody>
             </table>
         </div>
 
-        <div class="text-center" style="margin-bottom: 8px;">
+        <div id="nuevoAporteEvaluacion" class="text-center" style="margin-bottom: 8px; display: none;">
             <a class="btn btn-default" href="#" onclick="nuevoAporteEvaluacion()" role="button">NUEVO APORTE DE EVALUACIÓN</a>
         </div>
         
