@@ -28,24 +28,25 @@ class Aporte_evaluacion_model extends CI_Model {
         }
     }
     
-    function existeNombrePeriodoEvaluacion($nombrePeriodoEvaluacion,$id_periodo_lectivo,$id_institucion) {
-        $this->db->select('id_periodo_evaluacion');
-        $this->db->from('sw_periodo_evaluacion');
-        $this->db->where('pe_nombre', $nombrePeriodoEvaluacion);
-        $this->db->where('id_periodo_lectivo', $id_periodo_lectivo);
-        $this->db->where('id_institucion', $id_institucion);
+    function existeNombreAporteEvaluacion($nombreAporteEvaluacion,$id_periodo_evaluacion) {
+        $this->db->select('id_aporte_evaluacion');
+        $this->db->from('sw_aporte_evaluacion');
+        $this->db->where('ap_nombre', $nombreAporteEvaluacion);
+        $this->db->where('id_periodo_evaluacion', $id_periodo_evaluacion);
         $consulta = $this->db->get();
         $resultado = $consulta->row();
         return $resultado;
     }
     
-    function crearPeriodoEvaluacion($data){
-	$this->db->insert('sw_periodo_evaluacion',
-                            array('pe_nombre'=>$data['pe_nombre'],
-                                'pe_abreviatura'=>$data['pe_abreviatura'],
-                                'pe_principal'=>$data['pe_principal'],
-                                'id_periodo_lectivo'=>$data['id_periodo_lectivo'],
-                                'id_institucion'=>$data['id_institucion']
+    function crearAporteEvaluacion($data){
+	$this->db->insert('sw_aporte_evaluacion',
+                            array('ap_nombre'=>$data['ap_nombre'],
+                                'ap_abreviatura'=>$data['ap_abreviatura'],
+                                'ap_tipo'=>$data['ap_tipo'],
+                                'ap_estado'=>$data['ap_estado'],
+                                'ap_fecha_inicio'=>$data['ap_fecha_inicio'],
+                                'ap_fecha_fin'=>$data['ap_fecha_fin'],
+                                'id_periodo_evaluacion'=>$data['id_periodo_evaluacion']
                             )
                         );
     }

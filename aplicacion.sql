@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 22-04-2017 a las 14:19:27
+-- Tiempo de generación: 14-05-2017 a las 17:49:06
 -- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
@@ -94,14 +94,14 @@ CREATE TABLE IF NOT EXISTS `sw_institucion` (
   `in_nom_rector` varchar(45) DEFAULT NULL,
   `in_nom_secretario` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_institucion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `sw_institucion`
 --
 
 INSERT INTO `sw_institucion` (`id_institucion`, `in_nombre`, `in_direccion`, `in_telefono`, `in_nom_rector`, `in_nom_secretario`) VALUES
-(1, 'UNIDAD EDUCATIVA PCEI FISCAL SALAMANCA', 'Calle el Tiempo y Pasaje Mónaco', '2256-104', 'Mag. Edison Cuyo', 'Mag. Ana Pilataxi');
+(2, 'UNIDAD EDUCATIVA PCEI FISCAL SALAMANCA', 'Calle el Tiempo y Pasaje Mónaco', '2256-104', 'Mag. Edison Cuyo', 'Mag. Ana Pilataxi');
 
 -- --------------------------------------------------------
 
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `sw_menu` (
   `mnu_padre` int(11) NOT NULL,
   PRIMARY KEY (`id_menu`,`id_perfil`),
   KEY `fk_sw_menu_sw_perfil_idx` (`id_perfil`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Volcado de datos para la tabla `sw_menu`
@@ -127,16 +127,13 @@ CREATE TABLE IF NOT EXISTS `sw_menu` (
 
 INSERT INTO `sw_menu` (`id_menu`, `id_perfil`, `mnu_texto`, `mnu_enlace`, `mnu_nivel`, `mnu_orden`, `mnu_padre`) VALUES
 (1, 1, 'Cambiar la clave', 'usuario/cambiarClave', 1, 1, 0),
-(3, 1, 'Configuración', '#', 1, 2, 0),
-(4, 1, 'Perfiles', 'perfil', 2, 3, 3),
-(5, 1, 'Usuarios', 'usuario', 2, 4, 3),
-(6, 1, 'Menús', 'menu', 2, 5, 3),
-(7, 1, 'Institución', 'institucion', 2, 1, 3),
-(8, 1, 'Periodos Lectivos', 'periodo_lectivo', 2, 2, 3),
-(9, 2, 'Cambiar la clave', 'usuario/cambiarClave', 1, 1, 0),
-(10, 2, 'Definir Rúbricas', '#', 1, 2, 0),
-(11, 2, 'Periodos de Evaluación', 'periodo_evaluacion', 2, 1, 10),
-(12, 2, 'Aportes de Evaluación', 'aporte_evaluacion', 2, 2, 10);
+(2, 1, 'Perfiles', 'perfil', 1, 2, 0),
+(3, 1, 'Usuarios', 'usuario', 1, 3, 0),
+(4, 1, 'Menús', 'menu', 1, 4, 0),
+(6, 1, 'Notificaciones', 'notificacion', 1, 6, 0),
+(7, 1, 'Cerrar', '#', 1, 7, 0),
+(8, 1, 'Periodos', 'aporte_evaluacion/cerrar_periodos', 2, 1, 7),
+(9, 1, 'Periodos Lectivos', 'periodo_lectivo/cerrar_anio_lectivo', 2, 2, 7);
 
 -- --------------------------------------------------------
 
@@ -148,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `sw_perfil` (
   `id_perfil` int(11) NOT NULL AUTO_INCREMENT,
   `pe_nombre` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_perfil`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Volcado de datos para la tabla `sw_perfil`
@@ -156,12 +153,12 @@ CREATE TABLE IF NOT EXISTS `sw_perfil` (
 
 INSERT INTO `sw_perfil` (`id_perfil`, `pe_nombre`) VALUES
 (1, 'ADMINISTRADOR'),
-(2, 'AUTORIDAD'),
-(3, 'DOCENTE'),
-(4, 'ESTUDIANTE'),
-(5, 'INSPECCIÓN'),
-(6, 'SECRETARÍA'),
-(7, 'TUTOR'),
+(2, 'DOCENTE'),
+(3, 'SECRETARÍA'),
+(4, 'INSPECCIÓN'),
+(5, 'AUTORIDAD'),
+(6, 'TUTOR'),
+(7, 'ESTUDIANTE'),
 (8, 'REPRESENTANTE');
 
 -- --------------------------------------------------------
@@ -179,18 +176,7 @@ CREATE TABLE IF NOT EXISTS `sw_periodo_evaluacion` (
   `pe_principal` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id_periodo_evaluacion`),
   KEY `fk_sw_periodo_evaluacion_sw_periodo_lectivo1_idx` (`id_periodo_lectivo`,`id_institucion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
-
---
--- Volcado de datos para la tabla `sw_periodo_evaluacion`
---
-
-INSERT INTO `sw_periodo_evaluacion` (`id_periodo_evaluacion`, `id_periodo_lectivo`, `id_institucion`, `pe_nombre`, `pe_abreviatura`, `pe_principal`) VALUES
-(1, 1, 1, 'PRIMER QUIMESTRE', '1ER.Q.', 1),
-(2, 1, 1, 'SEGUNDO QUIMESTRE', '2DO.Q.', 1),
-(3, 1, 1, 'EXAMEN SUPLETORIO', 'SUPLE.', 2),
-(4, 1, 1, 'EXAMEN REMEDIAL', 'REMED.', 3),
-(5, 1, 1, 'EXAMEN DE GRACIA', 'GRACIA', 4);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -213,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `sw_periodo_lectivo` (
 --
 
 INSERT INTO `sw_periodo_lectivo` (`id_periodo_lectivo`, `id_institucion`, `pe_anio_inicio`, `pe_anio_fin`, `pe_estado`) VALUES
-(1, 1, 2016, 2017, 'A');
+(1, 2, 2016, 2017, 'A');
 
 -- --------------------------------------------------------
 
@@ -266,15 +252,17 @@ CREATE TABLE IF NOT EXISTS `sw_usuario` (
   PRIMARY KEY (`id_usuario`,`id_perfil`,`id_institucion`),
   KEY `fk_usuario_perfil_idx` (`id_perfil`),
   KEY `fk_usuario_institucion_idx` (`id_institucion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Volcado de datos para la tabla `sw_usuario`
 --
 
 INSERT INTO `sw_usuario` (`id_usuario`, `id_perfil`, `id_institucion`, `us_titulo`, `us_login`, `us_password`, `us_fullname`) VALUES
-(1, 1, 1, 'ING.', 'administrador', 'AlhnlffT1WlPf0wsWGnJBTGDhEmD4vG+UwQrCxhpy9k=', 'GONZALO PEÑAHERRERA'),
-(2, 2, 1, 'MG.', 'edisonc', 'X+Ve3aHrlWQVWMUAAKNo6utBd+BspS3v7wgCxzR2NMs=', 'EDISON CUYO');
+(1, 1, 2, 'ING.', 'administrador', 'AlhnlffT1WlPf0wsWGnJBTGDhEmD4vG+UwQrCxhpy9k=', 'GONZALO PEÑAHERRERA'),
+(2, 5, 2, 'MSC.', 'edisonc', 'X+Ve3aHrlWQVWMUAAKNo6utBd+BspS3v7wgCxzR2NMs=', 'EDISON CUYO'),
+(3, 2, 2, 'ING.', 'gonzalop', '2F53g5QTxKkrNxrOfRJEzqzgpn8Fal6k6BpoKjzDlSw=', 'GONZALO PEÑAHERRERA'),
+(4, 3, 2, 'MG.', 'anap', '0QzfhwZlWyCrHtnT3Ib2s+0xjN7HTnnAPgAR9y4YoWY=', 'ANA LUCIA PILATAXI');
 
 --
 -- Restricciones para tablas volcadas

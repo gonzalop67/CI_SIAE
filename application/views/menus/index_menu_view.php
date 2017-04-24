@@ -65,6 +65,7 @@
                     if(id_perfil=='0'){
                         $("#btnNuevoMenu").hide();
                     }else{
+                        $("#img_loader").show();
                         $.post(
                             "<?php echo site_url('menu/listarMenusPerfil') ?>",
                             {
@@ -96,8 +97,8 @@
                                             );
                                         }
                                     );
-                                    
                                 });
+                                $("#img_loader").hide();
                                 $("#btnNuevoMenu").show();
                             }
                         );
@@ -254,7 +255,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
-                        <th colspan="2">Acciones</th> 
+                        <th colspan="3">Acciones</th> 
                     </tr>
                 </thead>
                 <tbody>

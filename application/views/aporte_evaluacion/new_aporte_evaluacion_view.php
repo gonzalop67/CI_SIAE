@@ -66,21 +66,41 @@
                 
                 $("#new_aporte_evaluacion").submit(function(event){
                     event.preventDefault();
-                    $("#img_loader").show();
-                    $.post(
-                        "<?php echo site_url('aporte_evaluacion/recibirdatos'); ?>",
-                        {
-                            id_perfil: 1, 
-                            ap_nombre: $("#nombre").val(),
-                            ap_abreviatura: $("#abreviatura").val()
-                        },
-                        function(respuesta){
-                            var resp = JSON.parse(respuesta);
-                            $("#img_loader").hide();
-                            alert(resp.mensaje);
-                            location.href = "<?php echo site_url('aporte_evaluacion') ?>";
-                        }
-                    );
+                    var ap_tipo = $("#cboTipo").val();
+                    var ap_fecha_inicio = $("#fecInicio").val();
+                    var ap_fecha_fin = $("#fecFin").val();
+                    if(ap_tipo==0){
+                        $("#mensaje").css("color","red");
+                        $("#mensaje").html("Debe elegir un tipo de aporte de evaluación...");
+                        $("#cboTipo").focus();
+                    }else if(ap_fecha_inicio==''){
+                        $("#mensaje").css("color","red");
+                        $("#mensaje").html("Debe elegir una fecha de inicio...");
+                        $("#fecInicio").focus();
+                    }else if(ap_fecha_fin==''){
+                        $("#mensaje").css("color","red");
+                        $("#mensaje").html("Debe elegir una fecha de fin...");
+                        $("#fecFin").focus();
+                    }else{
+                        $("#img_loader").show();
+                        $.post(
+                            "<?php echo site_url('aporte_evaluacion/recibirdatos'); ?>",
+                            {
+                                id_periodo_evaluacion: "<?php echo $id; ?>", 
+                                ap_nombre: $("#nombre").val(),
+                                ap_abreviatura: $("#abreviatura").val(),
+                                ap_tipo: ap_tipo,
+                                ap_fecha_inicio: ap_fecha_inicio,
+                                ap_fecha_fin: ap_fecha_fin
+                            },
+                            function(respuesta){
+                                var resp = JSON.parse(respuesta);
+                                $("#img_loader").hide();
+                                alert(resp.mensaje);
+                                location.href = "<?php echo site_url('aporte_evaluacion') ?>";
+                            }
+                        );
+                    }
                 });
                 
                 $('.form_date').datetimepicker({
@@ -190,7 +210,7 @@
         </div>
 
         <!-- Aqui va el formulario de ingreso de un nuevo perfil -->
-        <form id="new_menu" class="form-horizontal form-margin" role="form" method="post" action="">
+        <form id="new_aporte_evaluacion" class="form-horizontal form-margin" role="form" method="post" action="">
             <div class="form-group" style="margin-top: 8px">
                 <label for="nomPeriodoEvaluacion" class="col-sm-2 control-label">Periodo de Evaluación:</label>
                 <div class="col-sm-4">
@@ -206,7 +226,7 @@
             <div class="form-group" style="margin-top: 8px">
                 <label for="abreviatura" class="col-sm-2 control-label">Abreviatura:</label>
                 <div class="col-sm-10">
-                    <input class="form-control" id="enlace" name="abreviatura" type="text" placeholder="Abreviatura del Aporte de Evaluación" value="" required>
+                    <input class="form-control" id="abreviatura" name="abreviatura" type="text" placeholder="Abreviatura del Aporte de Evaluación" value="" required>
                 </div>    
             </div>
             <div class="form-group" style="margin-top: 8px">
@@ -223,20 +243,20 @@
             <div class="form-group" style="margin-top: 8px">
                 <label for="fecInicio" class="col-sm-2 control-label">Fecha de Inicio:</label>
                 <div class="col-sm-2">
-                    <div id="fecInicio" class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" data-link-format="yyyy-mm-dd">
-                        <input class="form-control" type="text" value="" readonly required>
-                        <span class="add-on"><i class="icon-remove"></i></span>
+                    <div class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" data-link-format="yyyy-mm-dd">
+                        <input id="fecInicio" class="form-control" type="text" value="" readonly required>
+<!--                        <span class="add-on"><i class="icon-remove"></i></span>-->
                         <span class="add-on"><i class="icon-th"></i></span>
                     </div>
                     <input type="hidden" id="dtp_input1" value="" /><br/>
                 </div>    
             </div>
             <div class="form-group" style="margin-top: 8px">
-                <label for="fecFinal" class="col-sm-2 control-label">Fecha de Fin:</label>
+                <label for="fecFin" class="col-sm-2 control-label">Fecha de Fin:</label>
                 <div class="col-sm-2">
-                    <div id="fecFinal" class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                        <input class="form-control" type="text" value="" readonly required>
-                        <span class="add-on"><i class="icon-remove"></i></span>
+                    <div class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <input id="fecFin" class="form-control" type="text" value="" readonly required>
+<!--                        <span class="add-on"><i class="icon-remove"></i></span>-->
                         <span class="add-on"><i class="icon-th"></i></span>
                     </div>
                     <input type="hidden" id="dtp_input2" value="" /><br/>

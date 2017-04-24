@@ -51,24 +51,26 @@ class Aporte_evaluacion extends CI_Controller {
         $id_periodo_lectivo = $this->session->userdata('id_periodo_lectivo');
         $data['nom_periodoLectivo'] = $this->periodo_lectivo_model->obtenerNombrePeriodoLectivo($id_periodo_lectivo);
         $data['listarMenusNivel1'] = $this->Menu_model->listarMenusNivel1($id_perfil);
-        $id = $this->uri->segment(3);
-        $data['periodo_evaluacion_nom'] = $this->periodo_evaluacion_model->obtenerPeriodoEvaluacion($id)->pe_nombre;
+        $data['id'] = $this->uri->segment(3);
+        $data['periodo_evaluacion_nom'] = $this->periodo_evaluacion_model->obtenerPeriodoEvaluacion($data['id'])->pe_nombre;
         $this->load->view('aporte_evaluacion/new_aporte_evaluacion_view', $data);
     }
     
     public function recibirdatos() {
         $data = array(
-            'pe_nombre' => $this->input->post('nombre'),
-            'pe_abreviatura' => $this->input->post('abreviatura'),
-            'pe_principal' => $this->input->post('tipo'),
-            'id_periodo_lectivo' => $this->session->userdata('id_periodo_lectivo'),
-            'id_institucion' => $this->session->userdata('id_institucion')
+            'ap_nombre' => $this->input->post('ap_nombre'),
+            'ap_abreviatura' => $this->input->post('ap_abreviatura'),
+            'ap_tipo' => $this->input->post('ap_tipo'),
+            'ap_estado' => 'A',
+            'ap_fecha_inicio' => $this->input->post('ap_fecha_inicio'),
+            'ap_fecha_fin' => $this->input->post('ap_fecha_fin'),
+            'id_periodo_evaluacion' => $this->input->post('id_periodo_evaluacion')
         );
-        $existePeriodoEvaluacion = $this->periodo_evaluacion_model->existeNombrePeriodoEvaluacion($data['pe_nombre'],$data['id_periodo_lectivo'],$data['id_institucion']);
-        if ($existePeriodoEvaluacion) {
-            echo json_encode(array("mensaje"=>"Ya existe el periodo de evaluación digitado...","color"=>"red"));
+        $existeAporteEvaluacion = $this->aporte_evaluacion_model->existeNombreAporteEvaluacion($data['ap_nombre'],$data['id_periodo_evaluacion']);
+        if ($existeAporteEvaluacion) {
+            echo json_encode(array("mensaje"=>"Ya existe el aporte de evaluación digitado...","color"=>"red"));
         } else {
-            $this->periodo_evaluacion_model->crearPeriodoEvaluacion($data);
+            $this->aporte_evaluacion_model->crearAporteEvaluacion($data);
             echo json_encode(array("mensaje"=>"Datos ingresados exitosamente...","color"=>"blue"));
         }
     }
