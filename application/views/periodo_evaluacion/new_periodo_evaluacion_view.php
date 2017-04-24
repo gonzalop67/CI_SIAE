@@ -149,7 +149,7 @@
                                         <ul class="dropdown-menu">
                                             <?php foreach($this->Menu_model->listarMenusHijos($menu1->id_menu) as $menu2) { ?>
                                                 <li>
-                                                    <a href="<?php echo $menu2->mnu_enlace; ?>">
+                                                    <a href="<?php echo site_url($menu2->mnu_enlace); ?>">
                                                         <?php echo $menu2->mnu_texto; ?>
                                                     </a>
                                                 </li>

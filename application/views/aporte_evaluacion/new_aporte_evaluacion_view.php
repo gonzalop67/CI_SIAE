@@ -36,6 +36,7 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="<?php echo $base_url; ?>css/bootstrap.css">
         <link rel="stylesheet" href="<?php echo $base_url; ?>css/main.css">
+        <link rel="stylesheet" href="<?php echo $base_url; ?>css/bootstrap-datetimepicker.css" >
         <style>
             .color1 {
                 background-color: #ccc;
@@ -47,6 +48,8 @@
         <link rel="icon" href="<?php echo $base_url; ?>favicon.ico" />
         <script src="<?php echo $base_url; ?>js/vendor/jquery-1.10.1.min.js"></script>
         <script src="<?php echo $base_url; ?>js/vendor/bootstrap.min.js"></script>
+        <script src="<?php echo $base_url; ?>js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+        <script src="<?php echo $base_url; ?>js/locales/bootstrap-datetimepicker.es.js" charset="UTF-8"></script>
         <script src="<?php echo $base_url; ?>js/main.js"></script>
         <script src="<?php echo $base_url; ?>js/fecha_actual.js"></script>
         <script src="<?php echo $base_url; ?>js/funciones.js"></script>
@@ -67,9 +70,9 @@
                     $.post(
                         "<?php echo site_url('aporte_evaluacion/recibirdatos'); ?>",
                         {
-                            id_perfil: "<?php echo $id ?>",
-                            mnu_texto: $("#texto").val(),
-                            mnu_enlace: $("#enlace").val()
+                            id_perfil: 1, 
+                            ap_nombre: $("#nombre").val(),
+                            ap_abreviatura: $("#abreviatura").val()
                         },
                         function(respuesta){
                             var resp = JSON.parse(respuesta);
@@ -78,6 +81,17 @@
                             location.href = "<?php echo site_url('aporte_evaluacion') ?>";
                         }
                     );
+                });
+                
+                $('.form_date').datetimepicker({
+                    language:  'es',
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
                 });
             });
         </script>
@@ -142,7 +156,7 @@
                                         <ul class="dropdown-menu">
                                             <?php foreach($this->Menu_model->listarMenusHijos($menu1->id_menu) as $menu2) { ?>
                                                 <li>
-                                                    <a href="<?php echo $menu2->mnu_enlace; ?>">
+                                                    <a href="<?php site_url($menu2->mnu_enlace); ?>">
                                                         <?php echo $menu2->mnu_texto; ?>
                                                     </a>
                                                 </li>
@@ -184,15 +198,48 @@
                 </div>    
             </div>
             <div class="form-group" style="margin-top: 8px">
-                <label for="texto" class="col-sm-2 control-label">Texto:</label>
+                <label for="nombre" class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-10">
-                    <input class="form-control" id="texto" name="texto" type="text" placeholder="Texto del Menú" value="" required autofocus>
+                    <input class="form-control" id="nombre" name="nombre" type="text" placeholder="Nombre del Aporte de Evaluación" value="" required autofocus>
                 </div>    
             </div>
             <div class="form-group" style="margin-top: 8px">
-                <label for="enlace" class="col-sm-2 control-label">Enlace:</label>
+                <label for="abreviatura" class="col-sm-2 control-label">Abreviatura:</label>
                 <div class="col-sm-10">
-                    <input class="form-control" id="enlace" name="enlace" type="text" placeholder="Enlace del Menú" value="" required>
+                    <input class="form-control" id="enlace" name="abreviatura" type="text" placeholder="Abreviatura del Aporte de Evaluación" value="" required>
+                </div>    
+            </div>
+            <div class="form-group" style="margin-top: 8px">
+                <label for="cboTipo" class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="cboTipo" name="cboTipo">
+                        <option value="0"> Seleccione... </option> 
+                        <option value="1"> PARCIAL </option>
+                        <option value="2"> EXAMEN QUIMESTRAL </option>
+                        <option value="3"> SUPLETORIO </option>
+                    </select>
+                </div>    
+            </div>
+            <div class="form-group" style="margin-top: 8px">
+                <label for="fecInicio" class="col-sm-2 control-label">Fecha de Inicio:</label>
+                <div class="col-sm-2">
+                    <div id="fecInicio" class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" data-link-format="yyyy-mm-dd">
+                        <input class="form-control" type="text" value="" readonly required>
+                        <span class="add-on"><i class="icon-remove"></i></span>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    <input type="hidden" id="dtp_input1" value="" /><br/>
+                </div>    
+            </div>
+            <div class="form-group" style="margin-top: 8px">
+                <label for="fecFinal" class="col-sm-2 control-label">Fecha de Fin:</label>
+                <div class="col-sm-2">
+                    <div id="fecFinal" class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <input class="form-control" type="text" value="" readonly required>
+                        <span class="add-on"><i class="icon-remove"></i></span>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    <input type="hidden" id="dtp_input2" value="" /><br/>
                 </div>    
             </div>
             <div class="form-group">
