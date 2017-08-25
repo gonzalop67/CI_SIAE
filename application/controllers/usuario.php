@@ -78,14 +78,15 @@ class Usuario extends CI_Controller {
         
         $data['nom_usuario'] = $this->usuario_model->obtenerUsuario($id_usuario)->us_fullname;
         
-        $data['nom_perfil'] = $this->perfil_model->obtenerPerfil($id_perfil)->pe_nombre;
-        
         $data['nom_periodoLectivo'] = $this->periodo_lectivo_model->obtenerNombrePeriodoLectivo($id_periodo_lectivo);
         $data['listarMenusNivel1'] = $this->Menu_model->listarMenusNivel1($id_perfil);
         
         $data['id'] = $this->uri->segment(3);
         $data['usuario'] = $this->usuario_model->obtenerUsuario($data['id']);
         $data['clave'] = $this->encrypter->decrypt($data['usuario']->us_password);
+        
+        $data['nom_perfil'] = $this->perfil_model->obtenerPerfil($data['usuario']->id_perfil)->pe_nombre;
+        
         $this->load->view('usuarios/editar_usuario_view',$data);
     }
     
